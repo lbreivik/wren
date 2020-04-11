@@ -6,11 +6,16 @@ namespace filecopier
     public class Copier
     {
 
+        private string ProcessedFolder;
+
+        public Copier(string processedFolder) {
+            this.ProcessedFolder = processedFolder;
+        }
         public void Process(string path) {
             string[] files = 
                 Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
 
-              var processedFolder = new ProcessedFolder();  
+            var processedFolder = new ProcessedFolder();  
             foreach(var f in files) {
                 processedFolder.AddFile(f);
                 var rawFileInfo = getMatchingRawFile(f);
@@ -21,7 +26,8 @@ namespace filecopier
 
                 Console.WriteLine(f);
                 Console.WriteLine($"{getMatchingRawFile(f).ParentFolderName}-{getMatchingRawFile(f).RawFilePath}" );
-            }    
+            }  
+            CopyFiles(processedFolder);  
         }
 
         private RawFileInfo getMatchingRawFile(string jpg) {
@@ -32,13 +38,19 @@ namespace filecopier
         }
 
         private void CopyFiles(ProcessedFolder pf) {
-            var destFolder = Path.Combine("", pf.Name);
+            var destFolder = Path.Combine(ProcessedFolder, pf.Name);
             if (!Directory.Exists(destFolder)) {
                 Directory.CreateDirectory(destFolder);
             }
             foreach(var f in pf.Files) {
-                var destFilePath = Path.Combine(destFolder, Path.GetFileName(f));
-                File.Copy(f, destFilePath);
+                if (File.Exists(f)) {
+                    var destFilePath = Path.Combine(destFolder, Path.GetFileName(f));
+                    File.Copy(f, destFilePath);
+                }
+                else {
+                    Console.WriteLine($"couldn't find the file {f}");
+                }
+
             }
 
         }
