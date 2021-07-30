@@ -45,7 +45,12 @@ namespace filecopier
             foreach(var f in pf.Files) {
                 if (File.Exists(f)) {
                     var destFilePath = Path.Combine(destFolder, Path.GetFileName(f));
-                    File.Copy(f, destFilePath);
+                    if (!File.Exists(destFilePath)){
+                        File.Copy(f, destFilePath);
+                    }
+                    else {
+                        Console.WriteLine("File already exists");
+                    }
                 }
                 else {
                     Console.WriteLine($"couldn't find the file {f}");

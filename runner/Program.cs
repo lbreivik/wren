@@ -26,12 +26,14 @@ namespace runner
             //need to look over the folders in the starting folder 
 
             var folders = Directory.GetDirectories(startFolder);
+            //var folders = new string[] {"/Users/louise/Documents/Photos/20200426"};
             foreach(var folder in folders) {
+                
                 var justFolderName = Path.GetFileName(folder);
                 var publishFolder = Path.Combine(publishFolderRoot, justFolderName);
                 //Console.WriteLine($"{folder}-{publishFolder}");
                 if (!Directory.Exists(publishFolder)) {
-                var exportFolder = Path.Combine(folder, "exported");
+                var exportFolder = Path.Combine(folder, "export");
                     if (Directory.Exists(exportFolder)) {
                     //send it for processing
                     var copier = new Copier(publishFolderRoot);
